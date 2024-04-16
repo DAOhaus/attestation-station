@@ -8,11 +8,11 @@ import {
   useWalletClient,
 } from "wagmi";
 import { stageAtom } from "../store/stage";
-import shopConfig from "../../../contracts/out/Shop.sol/Shop.json";
+// import shopConfig from "../../../contracts/out/Shop.sol/Shop.json";
 import { getDeployedContract, saveDeployedContract } from "../lib/utils";
 import { getContractAddress } from "viem";
 import { useCurrentContract } from "../hooks/useCurrentContract";
-import marketplaceConfig from "../../../contracts/out/Marketplace.sol/Marketplace.json";
+// import marketplaceConfig from "../../../contracts/out/Marketplace.sol/Marketplace.json";
 import { uploadedImgAtom } from "../store/uploaded";
 import { nftJsonAtom } from "../store/nftJson";
 import { request } from "../Reusables/request";
@@ -28,9 +28,10 @@ export const TokenizeForm = () => {
   const contractAddress = useCurrentContract();
   const [uploadedImg, seUploadedImg] = useAtom(uploadedImgAtom);
   const [nftJson, setNftJson] = useAtom(nftJsonAtom);
+  const shopConfig = { abi: [], bytecode: '0x1234', }
 
   const getOrDeployContract = async () => {
-    if(!client) return;
+    if (!client) return;
     if (!contractAddress) {
       const txHash = await client.deployContract({
         args: [client.account.address],
@@ -47,14 +48,14 @@ export const TokenizeForm = () => {
         from: transaction.from,
         nonce: transaction.nonce,
       });
-      saveDeployedContract(address, deployedContractAddress, chain.id);
+      saveDeployedContract(address as string, deployedContractAddress, chain?.id);
       return deployedContractAddress;
     }
     return contractAddress;
   };
 
   const mintNFT = async (contract: string, cid: string) => {
-    if(!client) return;
+    if (!client) return;
     const txHash = await client.writeContract({
       address: contract,
       abi: shopConfig.abi,

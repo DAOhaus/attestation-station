@@ -87,7 +87,7 @@ const Home: NextPage = () => {
             </Text>
           </h1>
           <Text my={2} fontSize="2xl">
-            a secure digital notary for your rwa nfts
+            securely notarize your rwa nfts
           </Text>
 
           {/* <Button my={8} onClick={onOpen}>
