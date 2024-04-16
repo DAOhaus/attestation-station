@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 import {
@@ -30,6 +31,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { useAtom } from "jotai";
 import { Stage, stageAtom } from "../store/stage";
 import { ListingForm } from "../components/ListingForm";
+import useGlobalState, { nft } from "../hooks/useGlobalState";
 import QRCode from "react-qr-code";
 import { request } from "../Reusables/request";
 import { uploadedImgAtom } from "../store/uploaded";
@@ -38,20 +40,27 @@ import { usePriceFeeds } from "../hooks/usePriceFeed";
 
 const Home: NextPage = () => {
   const [stage, setStage] = useAtom(stageAtom);
+  const [nftData, setNftData] = useGlobalState(nft);
+
   const [uploadedImg, seUploadedImg] = useAtom(uploadedImgAtom);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  /*useEffect(() => {
-    (async () => {
-      const web3AuthModalPack = await initAuthKit();
-      const safe = await getOrCreateSafe(web3AuthModalPack);
-      await web3AuthModalPack.signOut();
-    })();
-  }, []);*/
+  const handleInputChange = (e) => {
+    console.log('change', e.target.value)
+    setNftData({ ...nftData, [e.target.id]: e.target.value })
+  }
 
-  const onDrop = useCallback(async (acceptedFiles: any) => {
-    setStage(Stage.describe);
+  const onDrop = useCallback(async (event: any) => {
+
+    console.log('onDrop', nftData)
+    if (nftData.address) {
+      console.log('existing', event)
+      // setNftData({ address: })
+      setStage(Stage.attest);
+    } else {
+      setStage(Stage.describe);
+    }
 
     // setFiles(acceptedFiles);
     // if (address) {
@@ -87,13 +96,8 @@ const Home: NextPage = () => {
             </Text>
           </h1>
           <Text my={2} fontSize="2xl">
-            securely notarize your rwa nfts
+            securely notarize your rwa nft with a cyrptographic attestation
           </Text>
-
-          {/* <Button my={8} onClick={onOpen}>
-            Take a photo
-          </Button>
-          <h2>OR</h2> */}
           <Box w={"full"} mt={3}>
             <Tabs align='center' variant='soft-rounded' colorScheme='gray'>
               <TabList>
@@ -104,13 +108,13 @@ const Home: NextPage = () => {
                 <TabPanel mt={5}>
                   <InputGroup>
                     <InputLeftAddon>NFT Address</InputLeftAddon>
-                    <Input type='text' backgroundColor="white" placeholder='0x1234...' />
+                    <Input id="address" type='text' backgroundColor="white" placeholder='0x1234...' onChange={handleInputChange} />
                   </InputGroup>
                   <InputGroup mt={2}>
                     <InputLeftAddon>NFT ID</InputLeftAddon>
-                    <Input type='text' backgroundColor="white" placeholder='32' />
+                    <Input id="id" type='text' backgroundColor="white" placeholder='32' onChange={handleInputChange} />
                   </InputGroup>
-                  <Button backgroundColor={"green"} mt={5}>Start</Button>
+                  {nftData.id && nftData.address && <Button backgroundColor={"green"} mt={5} id="existing_nft" onClick={onDrop}>Start</Button>}
                 </TabPanel>
                 <TabPanel>
                   <input
@@ -149,44 +153,6 @@ const Home: NextPage = () => {
           </Box>
         </main>
       </div>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Scan the QRCode to take photo</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <QRCode
-              size={256}
-              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-              value={window.location.href + "/camera"}
-              viewBox={`0 0 256 256`}
-            />
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button
-              isLoading={isLoading}
-              colorScheme="blue"
-              mr={3}
-              onClick={async () => {
-                setIsLoading(true);
-                const img = await request<{ data: string }>(
-                  "/api/upload-image",
-                  "GET"
-                );
-                seUploadedImg(img.data);
-                setIsLoading(false);
-                setStage(Stage.describe);
-              }}
-            >
-              Done
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Container>
   );
 };
