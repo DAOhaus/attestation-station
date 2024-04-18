@@ -2,25 +2,11 @@ import { useState } from 'react'
 import { Box, HStack, Input, Select, Stack, Text, Button, Textarea } from "@chakra-ui/react"
 import useGlobalState, { nft } from "../hooks/useGlobalState";
 import { debounce } from 'lodash';
+import { groupByKeyValue } from '../Reusables/utils';
 
 export const DescribeForm = () => {
     const [nftData, setNftData] = useGlobalState(nft)
-    function groupByKeyValue(obj: any, customAttributes?: any) {
-        const result: any = [];
-        for (const key in obj) {
-            try {
-                const [keyIndex, keyName] = key.split(':');
-                if (result[keyIndex]) {
-                    result[keyIndex] = { ...result[keyIndex], [keyName]: obj[key] };
-                } else if (keyName) {
-                    result[keyIndex] = { [keyName]: obj[key] };
-                }
-            } catch (error) {
-                return;
-            }
-        }
-        return result
-    }
+
     console.log('describe data', nftData)
     const [attributeCount, setAttributeCount] = useState(groupByKeyValue(nftData).length);
     const handleAttributeChange = debounce((e) => {
@@ -64,7 +50,7 @@ export const DescribeForm = () => {
             <Text mb={2}>Item Description</Text>
             <Textarea
                 value={nftData.description}
-                onChange={(e) => setNftData({ ...nftData, description: e.target.value })}
+                onChange={debounce((e) => setNftData({ ...nftData, description: e.target.value }), 500)}
                 minH={"150px"}
                 backgroundColor={"#D8DAF6"}
                 placeholder='This token represents my physical asset located at...' />

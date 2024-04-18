@@ -94,21 +94,10 @@ const Home: NextPage = () => {
           <Box w={"full"} mt={3}>
             <Tabs align='center' variant='soft-rounded' colorScheme='gray'>
               <TabList>
-                <Tab>Existing NFT</Tab>
                 <Tab>Create NFT</Tab>
+                <Tab>Existing NFT</Tab>
               </TabList>
               <TabPanels>
-                <TabPanel mt={5}>
-                  <InputGroup>
-                    <InputLeftAddon>NFT Address</InputLeftAddon>
-                    <Input id="address" type='text' backgroundColor="white" placeholder='0x1234...' onChange={handleInputChange} />
-                  </InputGroup>
-                  <InputGroup mt={2}>
-                    <InputLeftAddon>NFT ID</InputLeftAddon>
-                    <Input id="id" type='text' backgroundColor="white" placeholder='32' onChange={handleInputChange} />
-                  </InputGroup>
-                  {nftData.id && nftData.address && <Button backgroundColor={"green"} mt={5} id="existing_nft" onClick={onDrop}>Start</Button>}
-                </TabPanel>
                 <TabPanel>
                   <input
                     style={{ display: "none" }}
@@ -140,6 +129,17 @@ const Home: NextPage = () => {
                       Upload a PDF or Image of your NFT to get started!
                     </Text>
                   </Flex>
+                </TabPanel>
+                <TabPanel mt={5}>
+                  <InputGroup>
+                    <InputLeftAddon>NFT Address</InputLeftAddon>
+                    <Input id="address" type='text' backgroundColor="white" placeholder='0x1234...' onChange={handleInputChange} />
+                  </InputGroup>
+                  <InputGroup mt={2}>
+                    <InputLeftAddon>NFT ID</InputLeftAddon>
+                    <Input id="id" type='text' backgroundColor="white" placeholder='32' onChange={handleInputChange} />
+                  </InputGroup>
+                  {nftData.id && nftData.address && <Button backgroundColor={"green"} mt={5} id="existing_nft" onClick={onDrop}>Start</Button>}
                 </TabPanel>
               </TabPanels>
             </Tabs>
