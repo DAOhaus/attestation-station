@@ -4,9 +4,25 @@ import useGlobalState, { nft } from "../hooks/useGlobalState";
 import { debounce } from 'lodash';
 
 export const DescribeForm = () => {
-    const [attributeCount, setAttributeCount] = useState(0);
     const [nftData, setNftData] = useGlobalState(nft)
-    console.log('describe form', nftData)
+    function groupByKeyValue(obj: any, customAttributes?: any) {
+        const result: any = [];
+        for (const key in obj) {
+            try {
+                const [keyIndex, keyName] = key.split(':');
+                if (result[keyIndex]) {
+                    result[keyIndex] = { ...result[keyIndex], [keyName]: obj[key] };
+                } else if (keyName) {
+                    result[keyIndex] = { [keyName]: obj[key] };
+                }
+            } catch (error) {
+                return;
+            }
+        }
+        return result
+    }
+    console.log('describe data', nftData)
+    const [attributeCount, setAttributeCount] = useState(groupByKeyValue(nftData).length);
     const handleAttributeChange = debounce((e) => {
         const value = e.target.value
         const key = e.target.name
@@ -23,6 +39,7 @@ export const DescribeForm = () => {
         <Box>
             <Text mb={2}>Item name</Text>
             <Input
+                value={nftData.name}
                 onChange={(e) => setNftData({ ...nftData, name: e.target.value })}
                 backgroundColor={"#D8DAF6"}
                 placeholder="My Tokenized Asset"></Input>
@@ -32,6 +49,7 @@ export const DescribeForm = () => {
             <Text mb={2}>Category</Text>
             <Select
                 onChange={(e) => setNftData({ ...nftData, category: e.target.value })}
+                value={nftData.category}
                 backgroundColor={"#D8DAF6"}
                 placeholder='Select option'>
                 <option value='Art'>Art</option>
@@ -45,6 +63,7 @@ export const DescribeForm = () => {
         <Box>
             <Text mb={2}>Item Description</Text>
             <Textarea
+                value={nftData.description}
                 onChange={(e) => setNftData({ ...nftData, description: e.target.value })}
                 minH={"150px"}
                 backgroundColor={"#D8DAF6"}
@@ -53,8 +72,8 @@ export const DescribeForm = () => {
         {Array(attributeCount)
             .fill(0)
             .map((_, i) => <HStack key={i}>
-                <Input name={`${i}:display_type`} type='text' placeholder='attribute' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
-                <Input name={`${i}:value`} type='text' placeholder='value' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
+                <Input value={nftData[`${i}:display_type`]} name={`${i}:display_type`} type='text' placeholder='attribute' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
+                <Input value={nftData[`${i}:value`]} name={`${i}:value`} type='text' placeholder='value' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
             </HStack>)}
 
         <Button backgroundColor={'teal'} onClick={() => { setAttributeCount(attributeCount + 1) }}>+ Add Attribute</Button>
