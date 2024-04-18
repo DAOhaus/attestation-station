@@ -4,35 +4,27 @@ import { Stage, stageAtom } from "../store/stage";
 import { uploadedImgAtom } from "../store/uploaded";
 import { ConfirmForm } from "./ConfirmForm";
 import { DescribeForm } from "./DescribeForm"
+import { AttestForm } from "./AttestForm"
 import { ValuesForm } from "./ValuesForm";
 import { useRouter } from "next/router";
 import { TokenizeForm } from "./TokenizeForm";
 import useGlobalState, { nft } from "../hooks/useGlobalState";
-import { FaCloudUploadAlt } from "react-icons/fa";
-import { createRef, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
 
 export const ListingForm = () => {
-    const dropZoneRef: React.LegacyRef<HTMLDivElement> | undefined = createRef();
-    const onDrop = useCallback(async (event: any) => {
-        console.log('onDrop')
-    }, []);
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-    const [nftData, setNftData] = useGlobalState(nft);
+    const [nftData] = useGlobalState(nft);
     const [stage, setStage] = useAtom(stageAtom);
-    console.log('stage', stage)
     const router = useRouter();
-    const [uploadedImg, seUploadedImg] = useAtom(uploadedImgAtom);
-    const handleStageClick = (e) => {
-        console.log(e.target.dataset.index, e)
-        setStage(Number(e.target.dataset.index) + 1)
-    }
+    const [uploadedImg] = useAtom(uploadedImgAtom);
+    const handleStageClick = (e) => { setStage(Number(e.target.dataset.index) + 1) }
+
+    // RENDER
     return <Grid w={"100vw"} h="100vh" templateColumns='repeat(2, 1fr)' gap={0}>
         <Box
-            backgroundImage={uploadedImg}
+            backgroundImage={nftData.imageUrl || uploadedImg}
             backgroundSize={"contain"}
             // backgroundRepeat={"no-repeat"}
             backgroundPosition={"center"}
+            transition={'background-image 1s ease-in-out'}
         />
         <Box w={"full"} h={"full"} pos="relative" backgroundColor={"#E7E8FF"}>
             <Center mt="32">
@@ -52,50 +44,7 @@ export const ListingForm = () => {
                             <TokenizeForm />
                         </TabPanel>
                         <TabPanel>
-                            <Box mt={4}>
-                                <Text mb='8px'>Freeform Attestation:</Text>
-                                <Textarea
-                                    rows={8}
-                                    backgroundColor={'white'}
-                                    placeholder="An explination of what this token stands for, what it represents and/or any other important information you'd like to attach"
-                                />
-                                <Box position='relative' padding='10'>
-                                    <Divider />
-                                    <AbsoluteCenter px='4'>
-                                        or
-                                    </AbsoluteCenter>
-                                </Box>
-                                <input
-                                    style={{ display: "none" }}
-                                    {...getInputProps()}
-                                    type="file"
-                                    accept="*"
-                                />
-                                <Flex
-                                    {...getRootProps()}
-                                    w="full"
-                                    cursor="pointer"
-                                    ref={dropZoneRef}
-                                    p="0"
-                                    backdropFilter="blur(20px)"
-                                    border="2px dashed #000"
-                                    rounded="45px"
-                                    minH={{ base: "20vh" }}
-                                    bg="rgba(255, 255, 255, 0.09)"
-                                    direction="column"
-                                    transitionDuration="300ms"
-                                    alignItems="center"
-                                    _hover={{ background: "blackAlpha.100" }}
-                                    justify="center"
-                                    // py="10"
-                                    mb="10"
-                                >
-                                    <FaCloudUploadAlt size="60px" />
-                                    <Text fontWeight="normal" mt="2">
-                                        Legal Contract PDF
-                                    </Text>
-                                </Flex>
-                            </Box>
+                            <AttestForm />
                         </TabPanel>
                         {/* <TabPanel>
                             <ValuesForm />

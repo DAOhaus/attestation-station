@@ -5,6 +5,7 @@ export enum Stage {
     describe,
     mint,
     attest,
+    confirm,
     liquidity
 }
 

@@ -52,26 +52,19 @@ const Home: NextPage = () => {
   }
 
   const onDrop = useCallback(async (event: any) => {
-
-    console.log('onDrop', nftData)
     if (nftData.address) {
       console.log('existing', event)
-      // setNftData({ address: })
       setStage(Stage.attest);
     } else {
+      console.log('create', event)
+      let imageUrl;
+      try {
+        imageUrl = URL.createObjectURL(event[0]);
+      } catch (error) { }
+      setNftData({ file: event[0], imageUrl })
       setStage(Stage.describe);
     }
-
-    // setFiles(acceptedFiles);
-    // if (address) {
-    //   //console.log(address);
-    //   onApproveOpen();
-    //   //console.log(acceptedFiles);
-    // } else {
-    //   onApproveOpen();
-    //   onConnectOpen();
-    // }
-  }, []);
+  }, [nftData, setStage, setNftData]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const dropZoneRef: React.LegacyRef<HTMLDivElement> | undefined = createRef();
@@ -144,7 +137,7 @@ const Home: NextPage = () => {
                   >
                     <FaCloudUploadAlt size="60px" />
                     <Text fontWeight="normal" mt="2">
-                      Drag & Drop a file here to get started!
+                      Upload a PDF or Image of your NFT to get started!
                     </Text>
                   </Flex>
                 </TabPanel>
