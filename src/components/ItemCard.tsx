@@ -5,7 +5,7 @@ import { IoDiamondOutline } from "react-icons/io5"
 import { SellModel } from "./SellModel"
 import { useNFTJson } from "../hooks/useNFTJson"
 import { useEffect, useState } from "react"
-import { request } from "../Reusables/request"
+import { request } from "../reusables/request"
 
 export const ItemCard = ({ metadata, isMarket = false, tokenId }: { isMarket?: boolean, metadata?: string, tokenId: number }) => {
     let { data: nftJson } = useNFTJson(metadata);

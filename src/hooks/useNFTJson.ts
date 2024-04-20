@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { request } from "../Reusables/request"
+import { request } from "../reusables/request"
 import { NFTJson } from "../store/nftJson"
 
 export const useNFTJson = (cid?: string) => {

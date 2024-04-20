@@ -5,8 +5,8 @@ export enum Stage {
     describe,
     tokenize,
     attest,
+    mint,
     confirm,
-    liquidity
 }
 
 export const stageAtom = atom(Stage.uploading);

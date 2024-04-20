@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { pinata } from "../../Reusables/pinata_sdk";
+import { pinata } from "../../reusables/pinata_sdk";
 
 export default async function handler(
     req: NextApiRequest,

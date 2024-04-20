@@ -24,7 +24,7 @@ import {
   SOCIAL_DISCORD,
 } from "../../configuration/Config";
 import { NetworkStatus } from "../NetworkStatus";
-import { Logo, SocialButton } from "../../Reusables/helper";
+import { Logo, SocialButton } from "../../reusables/helper";
 
 interface Props {
   className?: string;

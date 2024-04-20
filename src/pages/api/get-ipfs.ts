@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ipfsConvert } from "../../Reusables/ipfsConvert";
-import { request } from "../../Reusables/request";
+import { ipfsConvert } from "../../reusables/ipfsConvert";
+import { request } from "../../reusables/request";
 
 export default async function handler(
     req: NextApiRequest,

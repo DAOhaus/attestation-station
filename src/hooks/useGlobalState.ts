@@ -1,8 +1,28 @@
 
-export const nft = createGlobalState({})
-function createGlobalState(initState = null) {
+export const nft = createGlobalState({
+  "file": {
+    "path": "tonynacumoto4.png"
+  },
+  "imageUrl": "blob:http://localhost:3000/3d2fa25f-6cd9-4d48-8473-b63a6487c59b",
+  "name": "Tony Nacu Token",
+  "category": "Art",
+  "description": "short description",
+  "0:display_type": "first attribute",
+  "0:value": "first value",
+  "erc20": {
+    "name": "Token Tracker",
+    "symbol": "TTT",
+    "supply": "100000"
+  },
+  "amm": {
+    "assetAmount": "100",
+    "stableAmount": "100",
+    "assetValue": 10000
+  }
+})
+function createGlobalState(initState) {
   const prototype = {
-    data: { state: initState, reRenderFns: [] },
+    data: { state: initState || null, reRenderFns: [] },
 
     get() {
       return this.data.state;

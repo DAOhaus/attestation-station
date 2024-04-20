@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { readIpfs, writeIpfs } from "../../Reusables/ipfs_sdk";
+import { readIpfs, writeIpfs } from "../../reusables/ipfs_sdk";
 
 export default async function handler(
     req: NextApiRequest,

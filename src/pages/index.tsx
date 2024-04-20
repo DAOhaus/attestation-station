@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 import {
@@ -7,14 +6,6 @@ import {
   Button,
   Flex,
   Container,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Tabs,
   TabList,
   Tab,
@@ -23,7 +14,6 @@ import {
   InputGroup,
   InputLeftAddon,
   Input,
-  InputRightAddon,
 } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { createRef, useCallback, useEffect, useState } from "react";
@@ -32,19 +22,10 @@ import { useAtom } from "jotai";
 import { Stage, stageAtom } from "../store/stage";
 import { ListingForm } from "../components/ListingForm";
 import useGlobalState, { nft } from "../hooks/useGlobalState";
-import QRCode from "react-qr-code";
-import { request } from "../Reusables/request";
-import { uploadedImgAtom } from "../store/uploaded";
-import { getOrCreateSafe, initAuthKit } from "../lib/safe-kit";
-import { usePriceFeeds } from "../hooks/usePriceFeed";
 
 const Home: NextPage = () => {
   const [stage, setStage] = useAtom(stageAtom);
   const [nftData, setNftData] = useGlobalState(nft);
-
-  const [uploadedImg, seUploadedImg] = useAtom(uploadedImgAtom);
-  const [isLoading, setIsLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleInputChange = (e) => {
     console.log('change', e.target.value)

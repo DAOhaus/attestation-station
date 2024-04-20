@@ -12,5 +12,9 @@ export function groupByKeyValue(obj: any, customAttributes?: any) {
       return;
     }
   }
+  if (customAttributes) {
+    const filteredAttributes = customAttributes.filter((attr: object) => attr);
+    result.push(...filteredAttributes);
+  }
   return result
 }

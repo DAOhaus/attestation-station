@@ -27,7 +27,7 @@ import {
 } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Logo } from "../../Reusables/helper";
+import { Logo } from "../../reusables/helper";
 import { Unlimit } from "../Unlimit";
 import { useRouter } from "next/router";
 import { HiShoppingBag } from "react-icons/hi";

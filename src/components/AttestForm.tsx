@@ -1,21 +1,26 @@
 import { Box, Text, Textarea, Divider, AbsoluteCenter, Flex } from "@chakra-ui/react"
 import { createRef, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import useGlobalState, { nft } from "../hooks/useGlobalState";
 import { FaCloudUploadAlt } from "react-icons/fa";
 
 export const AttestForm = () => {
+    const [nftData, setNftData] = useGlobalState(nft)
     const dropZoneRef: React.LegacyRef<HTMLDivElement> | undefined = createRef();
-    const onDrop = useCallback(async (event: any) => {
+    const onDrop = useCallback(async (upload: any) => {
         console.log('onDrop')
-    }, []);
+        setNftData({ ...nftData, attestation: { pdf: upload } })
+    }, [setNftData, nftData]);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
     return <Box mt={4}>
         <Text mb='8px'>Freeform Attestation:</Text>
         <Textarea
             rows={8}
+            value={nftData.attestation?.freeform}
+            onChange={(e) => setNftData({ ...nftData, attestation: { freeform: e.target.value } })}
             backgroundColor={'white'}
-            placeholder="An explination of what this token stands for, what it represents and/or any other important information you'd like to attach"
+            placeholder="Decleration of the opportunities, rights and/or obligations that are associated with this token."
         />
         <Box position='relative' padding='10'>
             <Divider />

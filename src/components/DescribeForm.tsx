@@ -1,20 +1,17 @@
 import { useState } from 'react'
 import { Box, HStack, Input, Select, Stack, Text, Button, Textarea } from "@chakra-ui/react"
 import useGlobalState, { nft } from "../hooks/useGlobalState";
-import { debounce } from 'lodash';
-import { groupByKeyValue } from '../Reusables/utils';
+import { groupByKeyValue } from '../reusables/utils';
 
 export const DescribeForm = () => {
     const [nftData, setNftData] = useGlobalState(nft)
 
-    console.log('describe data', nftData)
     const [attributeCount, setAttributeCount] = useState(groupByKeyValue(nftData).length);
-    const handleAttributeChange = debounce((e) => {
+    const handleAttributeChange = (e) => {
         const value = e.target.value
         const key = e.target.name
-        console.log('e', value, key, e.target)
         setNftData({ ...nftData, [key]: value })
-    }, 500)
+    }
     return <Stack pl={2} pr={4} gap={4}>
         <Text color={"gray"}>
             Describe your token and list usefull information about it.
@@ -23,7 +20,7 @@ export const DescribeForm = () => {
         </Text>
 
         <Box>
-            <Text mb={2}>Item name</Text>
+            <Text mb={1}>Item Name</Text>
             <Input
                 value={nftData.name}
                 onChange={(e) => setNftData({ ...nftData, name: e.target.value })}
@@ -32,7 +29,7 @@ export const DescribeForm = () => {
         </Box>
 
         <Box flexGrow={1}>
-            <Text mb={2}>Category</Text>
+            <Text mb={1}>Category</Text>
             <Select
                 onChange={(e) => setNftData({ ...nftData, category: e.target.value })}
                 value={nftData.category}
@@ -47,20 +44,23 @@ export const DescribeForm = () => {
         </Box>
 
         <Box>
-            <Text mb={2}>Item Description</Text>
+            <Text mb={1}>Item Description</Text>
             <Textarea
                 value={nftData.description}
-                onChange={debounce((e) => setNftData({ ...nftData, description: e.target.value }), 500)}
+                onChange={(e) => setNftData({ ...nftData, description: e.target.value })}
                 minH={"150px"}
                 backgroundColor={"#D8DAF6"}
                 placeholder='This token represents my physical asset located at...' />
         </Box>
-        {Array(attributeCount)
-            .fill(0)
-            .map((_, i) => <HStack key={i}>
-                <Input value={nftData[`${i}:display_type`]} name={`${i}:display_type`} type='text' placeholder='attribute' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
-                <Input value={nftData[`${i}:value`]} name={`${i}:value`} type='text' placeholder='value' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
-            </HStack>)}
+        <Box>
+            {!!attributeCount && <Text mb={1}>Attribute & Value</Text>}
+            {Array(attributeCount)
+                .fill(0)
+                .map((_, i) => <HStack key={i} mb={1}>
+                    <Input value={nftData[`${i}:trait_type`]} name={`${i}:trait_type`} type='text' placeholder='attribute' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
+                    <Input value={nftData[`${i}:value`]} name={`${i}:value`} type='text' placeholder='value' backgroundColor={"#D8DAF6"} onChange={handleAttributeChange} />
+                </HStack>)}
+        </Box>
 
         <Button backgroundColor={'teal'} onClick={() => { setAttributeCount(attributeCount + 1) }}>+ Add Attribute</Button>
     </Stack>

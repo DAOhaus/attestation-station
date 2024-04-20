@@ -1,11 +1,11 @@
-import { Grid, Box, Center, Tabs, TabList, Tab, TabPanels, TabPanel, Button, Text, Textarea, Divider, AbsoluteCenter, Flex } from "@chakra-ui/react"
+import { Grid, Box, Center, Tabs, TabList, Tab, TabPanels, TabPanel, Button } from "@chakra-ui/react"
 import { useAtom } from "jotai";
 import { Stage, stageAtom } from "../store/stage";
 import { uploadedImgAtom } from "../store/uploaded";
 import { ConfirmForm } from "./ConfirmForm";
 import { DescribeForm } from "./DescribeForm"
 import { AttestForm } from "./AttestForm"
-import { ValuesForm } from "./ValuesForm";
+import { MintForm } from "./MintForm";
 import { useRouter } from "next/router";
 import { TokenizeForm } from "./TokenizeForm";
 import useGlobalState, { nft } from "../hooks/useGlobalState";
@@ -33,7 +33,7 @@ export const ListingForm = () => {
                         <Tab onClick={handleStageClick}>Describe</Tab>
                         <Tab id="2" onClick={handleStageClick}>Tokenize</Tab>
                         <Tab id="3" onClick={handleStageClick}>Attest</Tab>
-                        {/* <Tab id="4" onClick={handleStageClick}>Liquidity</Tab> */}
+                        <Tab id="4" onClick={handleStageClick}>Mint</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -46,9 +46,9 @@ export const ListingForm = () => {
                         <TabPanel>
                             <AttestForm />
                         </TabPanel>
-                        {/* <TabPanel>
-                            <ValuesForm />
-                        </TabPanel> */}
+                        <TabPanel>
+                            <MintForm />
+                        </TabPanel>
                         <TabPanel>
                             <ConfirmForm />
                         </TabPanel>
@@ -72,6 +72,5 @@ export const ListingForm = () => {
                 </div>
             </Box>
         </Box>
-
     </Grid >
 }

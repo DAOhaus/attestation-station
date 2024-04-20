@@ -29,7 +29,7 @@ import { BsStars } from "react-icons/bs";
 import { chatAtom, chatOpenAtom } from "../../store/chat";
 import { useNFTJson } from "../../hooks/useNFTJson";
 import { useEffect, useState } from "react";
-import { request } from "../../Reusables/request";
+import { request } from "../../reusables/request";
 import { cancelListing } from "../../lib/marketplace";
 
 const Product = () => {

@@ -1,7 +1,7 @@
 import { Input, InputLeftElement, Text, Box, Center, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Stack, InputGroup, Spinner } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { ItemCard } from "../components/ItemCard";
-import { ValuesForm } from "../components/ValuesForm";
+import { MintForm } from "../components/MintForm";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useAllAssets } from "../hooks/useAllAssets";
 
@@ -44,14 +44,14 @@ const Assets: NextPage = () => {
 
                     <Flex gap={12} flexWrap="wrap" justifyContent="center">
                         {
-                            assets.map((asset, i) => <ItemCard tokenId={i+1} metadata={asset} key={i} />)
+                            assets.map((asset, i) => <ItemCard tokenId={i + 1} metadata={asset} key={i} />)
                         }
                         {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
                             (i) => <ItemCard key={i + 10086} />)} */}
                     </Flex>
                 </TabPanel>
                 <TabPanel>
-                    <ValuesForm />
+                    <MintForm />
                 </TabPanel>
             </TabPanels>
         </Tabs>

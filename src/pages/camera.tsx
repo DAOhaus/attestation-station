@@ -1,6 +1,6 @@
 import { Button, Center, Stack, useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import { request } from "../Reusables/request";
+import { request } from "../reusables/request";
 import imageCompression from 'browser-image-compression';
 
 const Camera = () => {
@@ -44,7 +44,7 @@ const Camera = () => {
                     status: 'success',
                     duration: 9000,
                     isClosable: true,
-                  })
+                })
             }}>Submit</Button>
         </Stack>
 
