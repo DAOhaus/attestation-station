@@ -2,6 +2,7 @@ import { Box, Button, HStack, Input, Select, Stack, Step, StepDescription, StepI
 import useGlobalState, { nft } from "../hooks/useGlobalState"
 import { groupByKeyValue } from "../reusables/utils"
 import deployedContracts from "../abi/deployedContracts"
+import imageAndMetadataUpload from "../reusables/fleekDualUpload"
 import { useContractWrite, useContractRead, usePublicClient, useWalletClient } from "wagmi"
 import { getContractAddress } from "viem"
 import { token1776Bytecode } from "../abi/bytecodes"
@@ -36,7 +37,7 @@ export const MintForm = () => {
         functionName: 'safeMint',
         args: [
             address,
-            // tokenURI
+            nftData.uploadHash
         ]
     })
 
@@ -45,6 +46,15 @@ export const MintForm = () => {
         abi: TokenFactory?.abi,
         functionName: 'getLastDeployedToken'
     })
+
+    const _metadata = {
+        name: nftData.name,
+        description: nftData.description,
+        attributes: groupByKeyValue(nftData, [
+            nftData.category ? { trait_type: 'category', value: nftData.category } : null,
+            erc20.deployedTokenAddress ? { trait_type: 'Linked Token', value: erc20.deployedTokenAddress } : null
+        ]),
+    };
 
     console.log('mint form', nftData)
 
@@ -99,22 +109,19 @@ export const MintForm = () => {
                     description: {nftData.description}<br></br>
                     attributes:
                     <Box pl={8}>
-                        {groupByKeyValue(
-                            nftData,
-                            nftData.category ? [
-                                { 'trait_type': 'category', 'value': nftData.category },
-                                ...erc20.deployedTokenAddress ? [
-                                    { 'trait_type': 'Linked Token', 'value': erc20.deployedTokenAddress }
-                                ] : []
-                            ] : null
-                        ).map((att, i) => <Text key={i}>{`${att.trait_type} : ${att.value}`}</Text>)}<br></br>
+                        {_metadata.attributes.map((att, i) => <Text key={i}>{`${att.trait_type} : ${att.value}`}</Text>)}<br></br>
                     </Box>
                 </Text>
             </>,
             cta: <Button mt={2} background="teal" size="sm" onClick={async () => {
                 setLoadingStates({ nft: true })
                 try {
-                    const deployData = await deployToken()
+                    const metadataHash = imageAndMetadataUpload(nftData.file, {
+                        name: nftData.name,
+                        description: nftData.description,
+
+                    })
+                    // const deployData = await deployToken()
                     // const typedHash = deployData?.hash as `0x${string}`
                     // const receipt = await publicClient?.waitForTransactionReceipt({ hash: typedHash });
                     // const { data: deployedTokenAddress } = await getLastDeployedToken()
