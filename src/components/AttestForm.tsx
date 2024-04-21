@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Text, Textarea, Divider, AbsoluteCenter, Flex, Button, Badge } from "@chakra-ui/react"
+import { Box, Text, Button, Badge } from "@chakra-ui/react"
 import axios from "axios"
 import { useState } from "react";
 import { getAttribute } from "../reusables/utils";
