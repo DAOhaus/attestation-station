@@ -24,13 +24,13 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { FaTag } from "react-icons/fa";
 import { IoDiamondOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
-import { SellModel } from "../../components/SellModel";
+// import { SellModel } from "../../components/SellModel";
 import { BsStars } from "react-icons/bs";
 import { chatAtom, chatOpenAtom } from "../../store/chat";
 import { useNFTJson } from "../../hooks/useNFTJson";
 import { useEffect, useState } from "react";
 import { request } from "../../reusables/request";
-import { cancelListing } from "../../lib/marketplace";
+// import { cancelListing } from "../../lib/marketplace";
 
 const Product = () => {
   const router = useRouter();
@@ -182,14 +182,14 @@ const Product = () => {
         </Box>
       </Box>
 
-      {nftJson && (
+      {/* {nftJson && (
         <SellModel
           nftJson={nftJson}
           isOpen={isOpen}
           onClose={onClose}
           src={imgSrc}
         />
-      )}
+      )} */}
     </Grid>
   );
 };

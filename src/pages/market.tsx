@@ -4,12 +4,12 @@ import { ItemCard } from "../components/ItemCard";
 import { useAtom } from "jotai";
 import { uploadedImgAtom } from "../store/uploaded";
 import { SearchIcon } from "@chakra-ui/icons";
-import { useAllListings } from "../hooks/useAllListings";
-import { buyProduct, cancelListing } from "../lib/marketplace";
+// import { useAllListings } from "../hooks/useAllListings";
+// import { buyProduct, cancelListing } from "../lib/marketplace";
 import { useNetwork, usePublicClient, useWalletClient } from "wagmi";
 
 const Assets: NextPage = () => {
-    const listings = useAllListings();
+    // const listings = useAllListings();
     const network = useNetwork();
     const { data: client } = useWalletClient();
     const publicClient = usePublicClient();
@@ -53,7 +53,7 @@ const Assets: NextPage = () => {
 
 
             </Flex>
-            <Stack>
+            {/* <Stack>
                 {listings.map((l,i) => {
                     return <HStack key={i}>
                         <Text>{l.seller}</Text>
@@ -81,7 +81,7 @@ const Assets: NextPage = () => {
                         </Button>
                     </HStack>
                 })}
-            </Stack>
+            </Stack> */}
         </Box>
     </Box>
 }

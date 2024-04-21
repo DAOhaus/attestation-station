@@ -2,7 +2,7 @@ import { Text, Box, Img, Stack, HStack, Tag, TagLeftIcon, TagLabel, Divider, But
 import { useRouter } from "next/router"
 import { FaTag } from "react-icons/fa"
 import { IoDiamondOutline } from "react-icons/io5"
-import { SellModel } from "./SellModel"
+// import { SellModel } from "./SellModel"
 import { useNFTJson } from "../hooks/useNFTJson"
 import { useEffect, useState } from "react"
 import { request } from "../reusables/request"
@@ -84,7 +84,7 @@ export const ItemCard = ({ metadata, isMarket = false, tokenId }: { isMarket?: b
             </Button>
         }
 
-        {nftJson && <SellModel tokenId={tokenId} nftJson={nftJson} isOpen={isOpen} onClose={onClose} src={imgSrc} />}
+        {/* {nftJson && <SellModel tokenId={tokenId} nftJson={nftJson} isOpen={isOpen} onClose={onClose} src={imgSrc} />} */}
     </Stack>
 
 }

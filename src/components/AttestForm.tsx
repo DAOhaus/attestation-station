@@ -124,9 +124,9 @@ export const AttestForm = () => {
         <Box >
             <Badge p={3} background={'white'} >
                 nftAddress: {NftFactory?.address}<br></br>
-                nftId: {BigInt(nftData?.nftId).toString()}<br></br>
+                nftId: {BigInt(nftData?.nftId || '').toString()}<br></br>
                 documentHash: {nftData?.fileHash || ''}<br></br>
-                tokenAddress: {nftData?.erc20.deployedTokenAddress || ''}
+                tokenAddress: {nftData?.erc20?.deployedTokenAddress || ''}
             </Badge>
             {nftData?.attestation?.txHash && <Badge p={1} size="sm">🥳 {nftData?.attestation?.txHash}</Badge>}
         </Box>
