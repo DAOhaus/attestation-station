@@ -4,8 +4,8 @@ export enum Stage {
     uploading = 0,
     describe,
     tokenize,
-    attest,
     mint,
+    attest,
     confirm,
 }
 

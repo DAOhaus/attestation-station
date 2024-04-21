@@ -37,8 +37,8 @@ export const DescribeForm = () => {
                 placeholder='Select option'>
                 <option value='art'>Art</option>
                 <option value='debt'>Debt</option>
-                <option value='legal document'>Legal Document</option>
                 <option value='watch'>Real Estate</option>
+                <option value='legal document'>Legal Document</option>
                 <option value='precious metal'>Precious Metal</option>
                 <option value='other'>Other</option>
             </Select>

@@ -6,22 +6,24 @@ const fleek = new FleekSdk({ accessTokenService: applicationService });
 
 // move this to file upload area to set initial PDF image for while minting
 const NftBaseURI = 'https://ipfs-gateway.legt.co/ipfs/'
-
-const uploadFunction = async (file, metadata, onError) => {
-  console.log('🚀 uploading file to IPFS with file & metadata:', file, metadata);
-  const uploadPath = (metadata.name + '-' + file.name).replace(/\s+/g, '');
-  const uploadResponse = await fleek
+export const singleUpload = async (file, path, onError?) => {
+  return await fleek
     .ipfs()
     .add({
-      path: uploadPath,
+      path: path,
       content: file,
     })
     .catch((err: any) => {
-      onError('Error uploading file');
+      onError(`Error uploading ${file}, ${path}`);
       console.error(err);
-      throw 'IPFS error uploading image';
+      throw `error uploading ${file}, ${path} to IPFS`;
     });
+}
 
+export const doubleUpload = async (file, metadata, onError) => {
+  console.log('🚀 uploading file to IPFS with file & metadata:', file, metadata);
+  const uploadPath = (metadata.name + '-' + file.name).replace(/\s+/g, '');
+  const uploadResponse = await singleUpload(file, uploadPath, onError)
   console.log(`🚀 uploaded file to IPFS: ${uploadResponse?.cid.toString()}`);
   const uploadHash = uploadResponse?.cid.toString();
   const isPdf = file.type.includes('pdf')
@@ -30,23 +32,12 @@ const uploadFunction = async (file, metadata, onError) => {
   } else {
     metadata.imageUrl = NftBaseURI + uploadHash
   }
-
   // upload metadata to IPFS
-  console.log('🚀 uploading metadata:', metadata);
-  const metadataResponse = await fleek
-    .ipfs()
-    .add({
-      path: uploadPath + '-metadata',
-      content: JSON.stringify(metadata),
-    })
-    .catch(() => {
-      onError('Error uploading your metadata, check for errors and try again');
-      throw 'IPFS error uploading metadata';
-    });
-
+  console.log('🚀 uploading metadata', metadata)
+  const metadataResponse = await singleUpload(JSON.stringify(metadata), uploadPath + '-metadata', onError)
   const metadataHash = metadataResponse?.cid.toString();
   console.log(`🚀 uploaded metadata to IPFS: ${metadataHash}`);
-  return metadataHash
+  return { metadataHash, fileHash: uploadHash }
 }
 
-export default uploadFunction
+export default doubleUpload 

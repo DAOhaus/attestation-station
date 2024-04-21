@@ -18,3 +18,8 @@ export function groupByKeyValue(obj: any, customAttributes?: any) {
   }
   return result
 }
+
+export function getAttribute(string: string, attributes: Array<{ trait_type: string, value: string }>) {
+  if (!attributes) return
+  return attributes?.find((attribute: { trait_type: string, value: string }) => attribute.trait_type === string);
+}

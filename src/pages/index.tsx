@@ -71,7 +71,7 @@ const Home: NextPage = () => {
               physical
             </Text>
           </h1>
-          <Text my={2} fontSize="2xl">
+          <Text my={2} fontSize="2xl" textAlign={'center'}>
             securely notarize your rwa nft with a cyrptographic attestation
           </Text>
           <Box w={"full"} mt={3}>

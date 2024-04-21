@@ -32,8 +32,8 @@ export const ListingForm = () => {
                     <TabList>
                         <Tab onClick={handleStageClick}>Describe</Tab>
                         <Tab id="2" onClick={handleStageClick}>Tokenize</Tab>
-                        <Tab id="3" onClick={handleStageClick}>Attest</Tab>
-                        <Tab id="4" onClick={handleStageClick}>Mint</Tab>
+                        <Tab id="3" onClick={handleStageClick}>Mint</Tab>
+                        <Tab id="4" onClick={handleStageClick}>Attest</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -44,10 +44,10 @@ export const ListingForm = () => {
                             <TokenizeForm />
                         </TabPanel>
                         <TabPanel>
-                            <AttestForm />
+                            <MintForm />
                         </TabPanel>
                         <TabPanel>
-                            <MintForm />
+                            <AttestForm />
                         </TabPanel>
                         <TabPanel>
                             <ConfirmForm />
@@ -62,10 +62,10 @@ export const ListingForm = () => {
                     }}>Back</Button>
                 </div>
                 <div>
-                    {stage !== Stage.confirm && <Button onClick={() => {
+                    {stage !== Stage.attest && <Button onClick={() => {
                         setStage(stage + 1)
                     }}>Proceed</Button>}
-                    {stage === Stage.confirm && <Button
+                    {(stage === Stage.confirm) && <Button
                         onClick={() => {
                             router.push("/assets")
                         }}>See your Assets</Button>}
