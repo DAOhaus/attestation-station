@@ -3,13 +3,14 @@ import { createRef, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import useGlobalState, { nft } from "../hooks/useGlobalState";
 import { FaCloudUploadAlt } from "react-icons/fa";
+const pdfUrl = 'https://ipfs-gateway.legt.co/ipfs/bafybeicqz376dgkrmrykjcrdafclqke4bzzqao3yymbbly4fjr4kdwttii'
 
 export const AttestForm = () => {
     const [nftData, setNftData] = useGlobalState(nft)
     const dropZoneRef: React.LegacyRef<HTMLDivElement> | undefined = createRef();
     const onDrop = useCallback(async (upload: any) => {
-        console.log('onDrop')
-        setNftData({ ...nftData, attestation: { pdf: upload } })
+        console.log('onDrop', upload)
+        setNftData({ ...nftData, attestation: { ...nftData.attestation, pdf: upload } })
     }, [setNftData, nftData]);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -18,7 +19,7 @@ export const AttestForm = () => {
         <Textarea
             rows={8}
             value={nftData.attestation?.freeform}
-            onChange={(e) => setNftData({ ...nftData, attestation: { freeform: e.target.value } })}
+            onChange={(e) => setNftData({ ...nftData, attestation: { ...nftData.attestation, freeform: e.target.value } })}
             backgroundColor={'white'}
             placeholder="Decleration of the opportunities, rights and/or obligations that are associated with this token."
         />
@@ -53,7 +54,8 @@ export const AttestForm = () => {
             // py="10"
             mb="10"
         >
-            <FaCloudUploadAlt size="60px" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {nftData?.attestation?.pdf ? <img src={pdfUrl} alt="pdf image" width='60' /> : <FaCloudUploadAlt size="60px" />}
             <Text fontWeight="normal" mt="2">
                 Legal Contract PDF
             </Text>

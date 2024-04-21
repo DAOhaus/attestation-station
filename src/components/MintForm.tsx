@@ -1,12 +1,13 @@
-import { Box, Button, HStack, Input, Select, Stack, Step, StepDescription, StepIcon, StepIndicator, StepNumber, StepSeparator, StepStatus, StepTitle, Stepper, Text, useSteps } from "@chakra-ui/react"
+import { Badge, Box, Button, HStack, Input, Select, Stack, Step, StepDescription, StepIcon, StepIndicator, StepNumber, StepSeparator, StepStatus, StepTitle, Stepper, Text, useSteps } from "@chakra-ui/react"
 import useGlobalState, { nft } from "../hooks/useGlobalState"
 import { groupByKeyValue } from "../reusables/utils"
 import deployedContracts from "../abi/deployedContracts"
 import imageAndMetadataUpload from "../reusables/fleekDualUpload"
 import { useContractWrite, useContractRead, usePublicClient, useWalletClient } from "wagmi"
-import { getContractAddress } from "viem"
+import { decodeEventLog } from "viem"
 import { token1776Bytecode } from "../abi/bytecodes"
 import { useState } from "react"
+import confetti from "canvas-confetti"
 export const MintForm = () => {
     const [nftData, setNftData] = useGlobalState(nft)
     const [loadingStates, setLoadingStates] = useState<Object>({});
@@ -18,6 +19,19 @@ export const MintForm = () => {
     const address = walletClient?.account.address
     const TokenFactory = deployedContracts[chainId]?.TOKEN1776Factory
     const NftFactory = deployedContracts[chainId]?.NFTMNTR1776
+    function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+    }
+    const win_effect = () => {
+        confetti({
+            angle: randomInRange(55, 125),
+            spread: randomInRange(50, 70),
+            particleCount: randomInRange(50, 100),
+            origin: { y: 0.6 },
+            ticks: 3000,
+            gravity: 2,
+        });
+    };
 
     const { writeAsync: deployToken } = useContractWrite({
         address: TokenFactory?.address,
@@ -31,14 +45,10 @@ export const MintForm = () => {
         ]
     })
 
-    const { writeAsync: mintToken } = useContractWrite({
+    const { writeAsync: mintNFT } = useContractWrite({
         address: NftFactory?.address,
         abi: NftFactory?.abi,
         functionName: 'safeMint',
-        args: [
-            address,
-            nftData.uploadHash
-        ]
     })
 
     const { refetch: getLastDeployedToken } = useContractRead({
@@ -52,11 +62,11 @@ export const MintForm = () => {
         description: nftData.description,
         attributes: groupByKeyValue(nftData, [
             nftData.category ? { trait_type: 'category', value: nftData.category } : null,
-            erc20.deployedTokenAddress ? { trait_type: 'Linked Token', value: erc20.deployedTokenAddress } : null
+            erc20.deployedTokenAddress ? { trait_type: 'linked token', value: erc20.deployedTokenAddress } : null
         ]),
     };
 
-    console.log('mint form', nftData)
+    // console.log('mint form', nftData)
 
     const steps = [
         {
@@ -69,7 +79,7 @@ export const MintForm = () => {
                     supply: {erc20?.supply}<br></br>
                 </Text>
             </>,
-            cta: <Button mt={4} background="teal" size="sm" onClick={async () => {
+            cta: <Button mt={4} pointerEvents={loadingStates.token ? 'none' : 'auto'} background="teal" size="sm" onClick={async () => {
                 setLoadingStates({ token: true })
                 try {
                     const deployData = await deployToken()
@@ -86,7 +96,7 @@ export const MintForm = () => {
             }}>
                 {loadingStates.token ? 'Mining...' : 'Mint'}
             </Button>,
-            result: <Button mt={4} background="gray" size="sm">{erc20.deployedTokenAddress}</Button>
+            result: <Badge mt={4} p={1} background="lightGray" size="sm">🥳 {erc20.deployedTokenAddress} </Badge>
         },
         ...amm.assetAmount ? [{
             title: 'AMM Liquidity Pool',
@@ -113,47 +123,58 @@ export const MintForm = () => {
                     </Box>
                 </Text>
             </>,
-            cta: <Button mt={2} background="teal" size="sm" onClick={async () => {
+            cta: <Button mt={2} pointerEvents={loadingStates.nft ? 'none' : 'auto'} background="teal" size="sm" onClick={async () => {
                 setLoadingStates({ nft: true })
                 try {
-                    const metadataHash = imageAndMetadataUpload(nftData.file, {
+                    const metadataHash = await imageAndMetadataUpload(nftData.file, {
                         name: nftData.name,
                         description: nftData.description,
-
+                        external_url: "https://legt.co",
+                        ...(nftData.file.type.includes('pdf') ? { image: nftData.imageUrl } : {}),
+                        attributes
+                    }, (error) => {
+                        console.log('error from upload', error)
                     })
-                    // const deployData = await deployToken()
-                    // const typedHash = deployData?.hash as `0x${string}`
-                    // const receipt = await publicClient?.waitForTransactionReceipt({ hash: typedHash });
-                    // const { data: deployedTokenAddress } = await getLastDeployedToken()
-                    // setNftData({ ...nftData, deployTokenId: '12' } })
+                    setNftData({ ...nftData, uploadHash: metadataHash })
+                    console.log('! minting nft with data', address, metadataHash)
+                    const { hash: nftMintHash } = await mintNFT({ args: [address, metadataHash] })
+                    const receipt = await publicClient?.waitForTransactionReceipt({ hash: nftMintHash });
+                    console.log('! receipt & nftMintHash', receipt, nftMintHash)
+                    console.log('decoding', receipt.log[1].data, receipt.logs[1].topics)
+                    const topics = decodeEventLog({
+                        abi: NftFactory.abi,
+                        data: receipt.logs[1].data,
+                        topics: receipt.logs[1].topics
+                    })
+                    console.log('! receipt & nftMintHash', topics, receipt, nftMintHash)
+                    setNftData({ ...nftData, nftMintHash })
                     setLoadingStates({ nft: false })
                     setActiveStep(steps.length)
+                    win_effect();
                 } catch (error) {
                     console.log('nft mint error', error)
-                    setLoadingStates({ token: false })
+                    setLoadingStates({})
                 }
             }}>
                 {loadingStates.nft ? 'Mining...' : 'Mint'}
             </Button>,
-            result: <Button mt={4} background="gray" size="sm">{nftData.deployedId}</Button>
+            result: <Badge background="lightGray" p={1} size="sm">🥳 {nftData.nftMintHash}</Badge>
         },
     ]
     const { activeStep, setActiveStep } = useSteps({
-        index: erc20.deployedTokenAddress ? 1 : 0,
+        index: nftData.uploadHash ? 2 : erc20.deployedTokenAddress ? 1 : 0,
         count: steps.length,
     })
     const handleStepChange = () => {
-        console.log('active step', activeStep)
         setActiveStep(activeStep + 1)
     }
     return <Stack pl={2} pr={4} gap={4}>
-        <Text color={"rgba(116, 122, 142, 0.50)"}>We'll walk you through the mint proccess which takes all the provided information into consideration</Text>
+        <Text color={"rgba(116, 122, 142, 0.50)"}>We&apos;ll walk you through the mint proccess which takes all the provided information into consideration</Text>
         <Stepper index={activeStep} orientation='vertical' gap='0' >
             {steps.map((step, index) => (
                 <Step key={index} style={{
                     width: '100%',
-                    opacity: `${activeStep === index ? 1 : .5}`,
-                    pointerEvents: `${activeStep === index ? 'auto' : 'none'}`
+                    opacity: `${(activeStep === index || activeStep === steps.length) ? 1 : .5}`
                 }}
                 >
                     <StepIndicator>

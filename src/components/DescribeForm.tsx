@@ -20,7 +20,7 @@ export const DescribeForm = () => {
         </Text>
 
         <Box>
-            <Text mb={1}>Item Name</Text>
+            <Text mb={1}>NFT Name</Text>
             <Input
                 value={nftData.name}
                 onChange={(e) => setNftData({ ...nftData, name: e.target.value })}
@@ -35,16 +35,17 @@ export const DescribeForm = () => {
                 value={nftData.category}
                 backgroundColor={"#D8DAF6"}
                 placeholder='Select option'>
-                <option value='Art'>Art</option>
-                <option value='Debt'>Debt</option>
-                <option value='Watch'>Real Estate</option>
-                <option value='Metal'>Precious Metal</option>
-                <option value='Other'>Other</option>
+                <option value='art'>Art</option>
+                <option value='debt'>Debt</option>
+                <option value='legal document'>Legal Document</option>
+                <option value='watch'>Real Estate</option>
+                <option value='precious metal'>Precious Metal</option>
+                <option value='other'>Other</option>
             </Select>
         </Box>
 
         <Box>
-            <Text mb={1}>Item Description</Text>
+            <Text mb={1}>NFT Description</Text>
             <Textarea
                 value={nftData.description}
                 onChange={(e) => setNftData({ ...nftData, description: e.target.value })}
@@ -53,7 +54,7 @@ export const DescribeForm = () => {
                 placeholder='This token represents my physical asset located at...' />
         </Box>
         <Box>
-            {!!attributeCount && <Text mb={1}>Attribute & Value</Text>}
+            {!!attributeCount && <HStack><Text mb={1} width={'50%'}>Attribute</Text><Text width={'50%'} mb={1}>Value</Text></HStack>}
             {Array(attributeCount)
                 .fill(0)
                 .map((_, i) => <HStack key={i} mb={1}>
@@ -63,6 +64,6 @@ export const DescribeForm = () => {
         </Box>
 
         <Button backgroundColor={'teal'} onClick={() => { setAttributeCount(attributeCount + 1) }}>+ Add Attribute</Button>
-    </Stack>
+    </Stack >
 
 }

@@ -56,7 +56,7 @@ const Product = () => {
         setImg(data.data);
       }
     );
-  }, [setImg, nftJson?.image]);
+  }, [setImg, nftJson]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [chatId, setChatId] = useAtom(chatAtom);
@@ -121,7 +121,7 @@ const Product = () => {
                 bg={"rgba(0, 8, 79, 0.05)"}
                 w={"fit-content"}
               >
-                <Image display={"inline"} src="/avatar.png" />
+                <Image display={"inline"} src="/avatar.png" alt="avatar" />
                 <Text> exwhyzee.eth</Text>
               </HStack>
               <Link
@@ -142,7 +142,7 @@ const Product = () => {
                   border={"2px solid #DBDDF6"}
                   w={"fit-content"}
                 >
-                  <Image display={"inline"} src="/chat.png" />
+                  <Image display={"inline"} src="/chat.png" alt="chat" />
                   <Text> Chat with Owner</Text>
                 </HStack>
               </Link>

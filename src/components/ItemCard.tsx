@@ -22,7 +22,7 @@ export const ItemCard = ({ metadata, isMarket = false, tokenId }: { isMarket?: b
         request<{ data: string }>(`/api/get-ipfs-image?cid=` + nftJson.image).then(data => {
             setImg(data.data)
         })
-    }, [setImg, nftJson.image])
+    }, [setImg, nftJson])
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const router = useRouter();

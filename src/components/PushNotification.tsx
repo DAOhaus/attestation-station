@@ -69,7 +69,7 @@ export const PushNotification = () => {
                                             onClick={() => setChatId(chat.chatId!)}
                                         >
                                             <HStack>
-                                                <Image src="/avatar.png" />
+                                                <Image alt="avatar" src="/avatar.png" />
                                                 <Stack>
                                                     {/* @ts-ignore */}
                                                     <Text>{chat.msg.messageObj?.content}</Text>

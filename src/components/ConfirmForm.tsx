@@ -30,7 +30,9 @@ export const ConfirmForm = () => {
     return <Stack pl={2} pr={4} gap={4}>
         <Center mt={"100px"}>
             <Box maxW={"100px"}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
+                    alt="success image"
                     src={"/success.png"}
                     width={"100%"}
                     height={"100%"}

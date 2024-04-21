@@ -40,7 +40,9 @@ const Home: NextPage = () => {
       console.log('create', event)
       let imageUrl;
       try {
-        imageUrl = URL.createObjectURL(event[0]);
+        const isPdf = event[0].type.includes('pdf')
+        const defaultPDFImage = 'https://ipfs-gateway.legt.co/ipfs/bafybeicqz376dgkrmrykjcrdafclqke4bzzqao3yymbbly4fjr4kdwttii'
+        imageUrl = isPdf ? defaultPDFImage : URL.createObjectURL(event[0]);
       } catch (error) { }
       setNftData({ file: event[0], imageUrl })
       setStage(Stage.describe);

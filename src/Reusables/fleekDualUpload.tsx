@@ -4,48 +4,43 @@ const applicationService = new ApplicationAccessTokenService({
 });
 const fleek = new FleekSdk({ accessTokenService: applicationService });
 
-const uploadFunction = async (file, metadata) => {
-  const uploadPath = (metadata.name + '-' + metadata.file.name).replace(/\s+/g, '');
-  console.log('🚀 uploading file to IPFS with file & token:', uploadPath);
+// move this to file upload area to set initial PDF image for while minting
+const NftBaseURI = 'https://ipfs-gateway.legt.co/ipfs/'
+
+const uploadFunction = async (file, metadata, onError) => {
+  console.log('🚀 uploading file to IPFS with file & metadata:', file, metadata);
+  const uploadPath = (metadata.name + '-' + file.name).replace(/\s+/g, '');
   const uploadResponse = await fleek
     .ipfs()
     .add({
       path: uploadPath,
-      content: formData.file,
+      content: file,
     })
     .catch((err: any) => {
-      setLoading(false);
-      setFormError('Error uploading file');
+      onError('Error uploading file');
       console.error(err);
       throw 'IPFS error uploading image';
     });
 
   console.log(`🚀 uploaded file to IPFS: ${uploadResponse?.cid.toString()}`);
   const uploadHash = uploadResponse?.cid.toString();
-  const imageHash = formData.file.type.includes('pdf') ? defaultPDFHash : uploadHash;
-  const _metadata = {
-    name: formData.name,
-    description: formData.description,
-    image: NftBaseURI + imageHash,
-    attributes: groupByKeyValue(formData, [
-      formData.file.type.includes('pdf') ? { trait_type: 'PDF', value: NftBaseURI + uploadHash } : null,
-      formData.createToken === 'on' ? { trait_type: linkedTokenKey, value: deployedTokenAddress } : null,
-      formData.createLP === 'on' ? { trait_type: linkedPoolKey, value: liquidityPoolAddress } : null,
-    ]),
-  };
+  const isPdf = file.type.includes('pdf')
+  if (isPdf) {
+    metadata.attributes.push({ 'trait_type': 'PDF', value: NftBaseURI + uploadHash })
+  } else {
+    metadata.imageUrl = NftBaseURI + uploadHash
+  }
 
   // upload metadata to IPFS
-  console.log('🚀 uploading metadata to IPFS:', _metadata);
+  console.log('🚀 uploading metadata:', metadata);
   const metadataResponse = await fleek
     .ipfs()
     .add({
       path: uploadPath + '-metadata',
-      content: JSON.stringify(_metadata),
+      content: JSON.stringify(metadata),
     })
     .catch(() => {
-      setFormError('Error minting your token, check all your inputs for errors and try again');
-      setLoading(false);
-      setFormError('Error uploading your metadata, check for errors and try again');
+      onError('Error uploading your metadata, check for errors and try again');
       throw 'IPFS error uploading metadata';
     });
 

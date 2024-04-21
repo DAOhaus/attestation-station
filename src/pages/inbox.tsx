@@ -54,7 +54,7 @@ const Inbox = () => {
         // Register again just in case
         await performRegistration()
         await subscribe()
-    }, [subscribe, isRegistered])
+    }, [subscribe, performRegistration])
 
     const { subscription } = useSubscription()
     const { messages } = useMessages()

@@ -47,7 +47,7 @@ export const useSubscribe = () => {
     const { isSubscribed, isSubscribing, subscribe } = useManageSubscription()
 
     const performSubscribe = useCallback(async () => {
-        if(isSubscribed) return
+        if (isSubscribed) return
         // Register again just in case
         await performRegistration()
         await subscribe()
@@ -58,7 +58,7 @@ export const useSubscribe = () => {
             duration: 9000,
             isClosable: true,
         })
-    }, [subscribe, isRegistered])
+    }, [subscribe, isSubscribed, performRegistration, toast])
 
     const { subscription } = useSubscription()
     const { messages } = useMessages()
